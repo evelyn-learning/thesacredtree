@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { Menu, X, Heart, Settings } from 'lucide-react';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -18,6 +19,7 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
@@ -51,7 +53,23 @@ export default function Header() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
+            {session && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-500 transition-colors"
+              >
+                <Settings className="w-4 h-4" />
+                Admin
+              </Link>
+            )}
+            <Link
+              href="/donate"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors"
+            >
+              <Heart className="w-4 h-4" />
+              Donate
+            </Link>
             <Link href="/volunteer" className="btn-primary">
               Join Us
             </Link>
@@ -86,13 +104,33 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href="/volunteer"
-                className="btn-primary mt-4"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Join Us
-              </Link>
+              {session && (
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center gap-2 text-base font-medium text-gray-600 hover:text-primary-500 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Settings className="w-4 h-4" />
+                  Admin
+                </Link>
+              )}
+              <div className="flex flex-col gap-3 mt-4">
+                <Link
+                  href="/donate"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Heart className="w-4 h-4" />
+                  Donate
+                </Link>
+                <Link
+                  href="/volunteer"
+                  className="btn-primary text-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Join Us
+                </Link>
+              </div>
             </div>
           </div>
         )}

@@ -19,6 +19,7 @@ import {
   Plus,
   LogOut,
   Settings,
+  Layout,
 } from 'lucide-react';
 
 async function getStats() {
@@ -125,6 +126,45 @@ export default async function AdminDashboard() {
               <div className="text-sm text-gray-500">{stat.label}</div>
             </Link>
           ))}
+        </div>
+
+        {/* Website Pages */}
+        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Website Pages</h3>
+            <Link
+              href="/admin/pages"
+              className="text-sm text-primary-600 hover:underline"
+            >
+              View All
+            </Link>
+          </div>
+          <p className="text-gray-600 mb-4">
+            Edit the content of your main website pages.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/admin/pages/home/edit"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              <Layout className="w-4 h-4" />
+              Home
+            </Link>
+            <Link
+              href="/admin/pages/about/edit"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              <Layout className="w-4 h-4" />
+              About
+            </Link>
+            <Link
+              href="/admin/pages/mission/edit"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              <Layout className="w-4 h-4" />
+              Our Mission
+            </Link>
+          </div>
         </div>
 
         {/* Quick Actions */}
