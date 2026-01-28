@@ -3,6 +3,17 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 
+function sanitizeImageUrl(url: string): string {
+  if (!url) return '';
+  const trimmed = url.trim();
+  // Only allow http, https, and relative URLs (starting with /)
+  if (trimmed.startsWith('https://') || trimmed.startsWith('http://') || trimmed.startsWith('/')) {
+    return trimmed;
+  }
+  // Block javascript:, data:, and other potentially dangerous schemes
+  return '';
+}
+
 interface MultiImageUploadProps {
   value: string[];
   onChange: (urls: string[]) => void;
@@ -105,10 +116,13 @@ export default function MultiImageUpload({
       {/* Image Grid */}
       {value.length > 0 && (
         <div className="flex flex-wrap gap-3">
-          {value.map((url, index) => (
+          {value.map((url, index) => {
+            const safeUrl = sanitizeImageUrl(url);
+            if (!safeUrl) return null;
+            return (
             <div key={index} className="relative group">
               <img
-                src={url}
+                src={safeUrl}
                 alt={`Image ${index + 1}`}
                 className="w-24 h-24 object-cover rounded-lg border border-gray-200"
               />
@@ -120,7 +134,8 @@ export default function MultiImageUpload({
                 <X className="w-3 h-3" />
               </button>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

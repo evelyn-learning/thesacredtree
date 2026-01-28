@@ -3,6 +3,17 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 
+function sanitizeImageUrl(url: string): string {
+  if (!url) return '';
+  const trimmed = url.trim();
+  // Only allow http, https, and relative URLs (starting with /)
+  if (trimmed.startsWith('https://') || trimmed.startsWith('http://') || trimmed.startsWith('/')) {
+    return trimmed;
+  }
+  // Block javascript:, data:, and other potentially dangerous schemes
+  return '';
+}
+
 interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
@@ -88,10 +99,10 @@ export default function ImageUpload({
       <label className="block text-sm font-medium text-gray-700">{label}</label>
 
       {/* Preview */}
-      {value && (
+      {value && sanitizeImageUrl(value) && (
         <div className="relative inline-block">
           <img
-            src={value}
+            src={sanitizeImageUrl(value)}
             alt="Preview"
             className="w-32 h-32 object-cover rounded-lg border border-gray-200"
           />
