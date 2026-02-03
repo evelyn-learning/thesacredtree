@@ -1,5 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+export interface IPageButton {
+  id: string;
+  text: string;
+  link: string;
+  variant?: 'primary' | 'secondary';
+}
+
 export interface IPageSection {
   id: string;
   type: 'hero' | 'content' | 'cta' | 'features' | 'gallery' | 'custom';
@@ -9,6 +16,7 @@ export interface IPageSection {
   image?: string;
   buttonText?: string;
   buttonLink?: string;
+  buttons?: IPageButton[];
   items?: Array<{
     title: string;
     description: string;
@@ -40,6 +48,13 @@ const PageSectionSchema = new Schema({
   image: { type: String },
   buttonText: { type: String },
   buttonLink: { type: String },
+  buttons: [{
+    id: { type: String },
+    text: { type: String },
+    link: { type: String },
+    variant: { type: String, enum: ['primary', 'secondary'], default: 'primary' },
+    _id: false,
+  }],
   items: [{
     title: { type: String },
     description: { type: String },

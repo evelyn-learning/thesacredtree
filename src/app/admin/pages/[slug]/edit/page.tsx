@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
 import ImageUpload from '@/components/admin/ImageUpload';
 
+interface PageButton {
+  id: string;
+  text: string;
+  link: string;
+  variant: 'primary' | 'secondary';
+}
+
 interface PageSection {
   id: string;
   type: 'hero' | 'content' | 'cta' | 'features';
@@ -15,6 +22,7 @@ interface PageSection {
   image?: string;
   buttonText?: string;
   buttonLink?: string;
+  buttons?: PageButton[];
 }
 
 const pageInfo: Record<string, { title: string; path: string }> = {
@@ -126,6 +134,53 @@ export default function EditPage() {
     setFormData({
       ...formData,
       sections: formData.sections.filter((s) => s.id !== id),
+    });
+  }
+
+  function addButton(sectionId: string) {
+    setFormData({
+      ...formData,
+      sections: formData.sections.map((s) =>
+        s.id === sectionId
+          ? {
+              ...s,
+              buttons: [
+                ...(s.buttons || []),
+                { id: generateId(), text: '', link: '', variant: 'primary' as const },
+              ],
+            }
+          : s
+      ),
+    });
+  }
+
+  function updateButton(sectionId: string, buttonId: string, updates: Partial<PageButton>) {
+    setFormData({
+      ...formData,
+      sections: formData.sections.map((s) =>
+        s.id === sectionId
+          ? {
+              ...s,
+              buttons: (s.buttons || []).map((b) =>
+                b.id === buttonId ? { ...b, ...updates } : b
+              ),
+            }
+          : s
+      ),
+    });
+  }
+
+  function removeButton(sectionId: string, buttonId: string) {
+    setFormData({
+      ...formData,
+      sections: formData.sections.map((s) =>
+        s.id === sectionId
+          ? {
+              ...s,
+              buttons: (s.buttons || []).filter((b) => b.id !== buttonId),
+            }
+          : s
+      ),
     });
   }
 
@@ -310,30 +365,70 @@ export default function EditPage() {
                       />
 
                       {(section.type === 'hero' || section.type === 'cta') && (
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Button Text
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Buttons
                             </label>
-                            <input
-                              type="text"
-                              value={section.buttonText || ''}
-                              onChange={(e) => updateSection(section.id, { buttonText: e.target.value })}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                            />
+                            <button
+                              type="button"
+                              onClick={() => addButton(section.id)}
+                              className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-primary-50 text-primary-600 rounded hover:bg-primary-100"
+                            >
+                              <Plus className="w-3 h-3" /> Add Button
+                            </button>
                           </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Button Link
-                            </label>
-                            <input
-                              type="text"
-                              value={section.buttonLink || ''}
-                              onChange={(e) => updateSection(section.id, { buttonLink: e.target.value })}
-                              placeholder="/volunteer"
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                            />
-                          </div>
+
+                          {(!section.buttons || section.buttons.length === 0) ? (
+                            <p className="text-sm text-gray-400 italic">No buttons added yet</p>
+                          ) : (
+                            <div className="space-y-3">
+                              {section.buttons.map((button, btnIndex) => (
+                                <div key={button.id} className="flex gap-2 items-start p-3 bg-gray-50 rounded-lg">
+                                  <div className="flex-1 grid grid-cols-3 gap-2">
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Text</label>
+                                      <input
+                                        type="text"
+                                        value={button.text}
+                                        onChange={(e) => updateButton(section.id, button.id, { text: e.target.value })}
+                                        placeholder="Button text"
+                                        className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Link</label>
+                                      <input
+                                        type="text"
+                                        value={button.link}
+                                        onChange={(e) => updateButton(section.id, button.id, { link: e.target.value })}
+                                        placeholder="/volunteer"
+                                        className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Style</label>
+                                      <select
+                                        value={button.variant}
+                                        onChange={(e) => updateButton(section.id, button.id, { variant: e.target.value as 'primary' | 'secondary' })}
+                                        className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                      >
+                                        <option value="primary">Primary</option>
+                                        <option value="secondary">Secondary</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeButton(section.id, button.id)}
+                                    className="mt-5 text-red-500 hover:text-red-700"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

@@ -52,7 +52,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col antialiased">
         <Providers>
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main className="grow">{children}</main>
           <Footer />
         </Providers>
       </body>

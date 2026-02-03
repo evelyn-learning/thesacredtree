@@ -6,11 +6,22 @@ import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 function sanitizeImageUrl(url: string): string {
   if (!url) return '';
   const trimmed = url.trim();
-  // Only allow http, https, and relative URLs (starting with /)
-  if (trimmed.startsWith('https://') || trimmed.startsWith('http://') || trimmed.startsWith('/')) {
+
+  // Allow relative URLs (starting with / but not //)
+  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
     return trimmed;
   }
-  // Block javascript:, data:, and other potentially dangerous schemes
+
+  // Validate absolute URLs using URL API for robust protocol checking
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+      return parsed.href;
+    }
+  } catch {
+    // Invalid URL format
+  }
+
   return '';
 }
 

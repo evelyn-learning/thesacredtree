@@ -108,6 +108,18 @@ scp -o StrictHostKeyChecking=no "$ZIP_FILE" "$SERVER_USER@$SERVER_IP:$REMOTE_APP
 }
 log_message "INFO" "Successfully uploaded zip file to server"
 
+# Step 3.5: Upload production environment file
+log_message "STEP" "Uploading production environment file..."
+if [ -f ".env.local.production" ]; then
+  scp -o StrictHostKeyChecking=no ".env.local.production" "$SERVER_USER@$SERVER_IP:$REMOTE_APP_DIR/.env.local" || {
+    log_message "ERROR" "Failed to upload .env.local.production to server"
+    exit 1
+  }
+  log_message "INFO" "Successfully uploaded .env.local.production as .env.local"
+else
+  log_message "WARNING" ".env.local.production not found - remote .env.local will not be updated"
+fi
+
 # Step 4: Deploy on remote server
 log_message "STEP" "Running deployment on production server..."
 run_remote_command "

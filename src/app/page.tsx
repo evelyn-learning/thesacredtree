@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Heart, Users, Building, Calendar, ArrowRight } from 'lucide-react';
 import { connectDB, isDBConfigured } from '@/lib/db';
 import DonationDrive from '@/models/DonationDrive';
+import Page, { IPageSection, IPageButton } from '@/models/Page';
 import { formatDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -13,6 +14,19 @@ const stats = [
   { label: 'Donation Drives', value: '50+', icon: Calendar },
   { label: 'Community Partners', value: '20+', icon: Heart },
 ];
+
+async function getHomePage() {
+  if (!isDBConfigured()) {
+    return null;
+  }
+  try {
+    await connectDB();
+    const page = await Page.findOne({ slug: 'home' }).lean();
+    return page ? JSON.parse(JSON.stringify(page)) : null;
+  } catch {
+    return null;
+  }
+}
 
 async function getRecentDrives() {
   if (!isDBConfigured()) {
@@ -30,36 +44,180 @@ async function getRecentDrives() {
   }
 }
 
+// Helper to get buttons (supports both old and new format)
+function getButtons(section: IPageSection): IPageButton[] {
+  if (section.buttons && section.buttons.length > 0) {
+    return section.buttons;
+  }
+  // Backwards compatibility with old single button format
+  if (section.buttonText && section.buttonLink) {
+    return [{ id: 'legacy', text: section.buttonText, link: section.buttonLink, variant: 'primary' }];
+  }
+  return [];
+}
+
+// Component to render dynamic sections from admin
+function RenderSection({ section }: { section: IPageSection }) {
+  const buttons = getButtons(section);
+
+  switch (section.type) {
+    case 'hero':
+      return (
+        <section className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 overflow-hidden min-h-[500px]">
+          {section.image && (
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={section.image}
+                alt={section.title || 'Hero image'}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/40" />
+            </div>
+          )}
+          <div className="container-wide py-20 md:py-32 relative z-10">
+            <div className="max-w-3xl">
+              {section.title && (
+                <h1 className="heading-1 text-gray-900 mb-6">{section.title}</h1>
+              )}
+              {section.subtitle && (
+                <p className="text-2xl text-primary-500 font-medium mb-4">{section.subtitle}</p>
+              )}
+              {section.content && (
+                <p className="text-xl text-gray-600 mb-8">{section.content}</p>
+              )}
+              {buttons.length > 0 && (
+                <div className="flex flex-wrap gap-4">
+                  {buttons.map((button) => (
+                    <Link
+                      key={button.id}
+                      href={button.link}
+                      className={button.variant === 'secondary' ? 'btn-secondary' : 'btn-primary'}
+                    >
+                      {button.text}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+
+    case 'content':
+      return (
+        <section className="section-padding bg-gray-50">
+          <div className="container-wide">
+            <div className="max-w-3xl mx-auto text-center">
+              {section.title && (
+                <h2 className="heading-2 text-gray-900 mb-6">{section.title}</h2>
+              )}
+              {section.content && (
+                <p className="text-lg text-gray-600 mb-8">{section.content}</p>
+              )}
+              {section.image && (
+                <div className="relative h-64 md:h-96 rounded-xl overflow-hidden mb-8">
+                  <Image
+                    src={section.image}
+                    alt={section.title || 'Content image'}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              {section.buttonText && section.buttonLink && (
+                <Link
+                  href={section.buttonLink}
+                  className="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 font-medium"
+                >
+                  {section.buttonText} <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+
+    case 'cta':
+      return (
+        <section className="section-padding bg-primary-500">
+          <div className="container-wide text-center">
+            {section.title && (
+              <h2 className="heading-2 text-white mb-6">{section.title}</h2>
+            )}
+            {section.content && (
+              <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">{section.content}</p>
+            )}
+            {buttons.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-4">
+                {buttons.map((button) => (
+                  <Link
+                    key={button.id}
+                    href={button.link}
+                    className={
+                      button.variant === 'secondary'
+                        ? 'inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white border-2 border-white rounded-lg hover:bg-white/10 transition-colors'
+                        : 'inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-500 bg-white rounded-lg hover:bg-gray-50 transition-colors'
+                    }
+                  >
+                    {button.text}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      );
+
+    default:
+      return null;
+  }
+}
+
 export default async function HomePage() {
-  const recentDrives = await getRecentDrives();
+  const [homePage, recentDrives] = await Promise.all([
+    getHomePage(),
+    getRecentDrives(),
+  ]);
+
+  // Check if custom content should be used
+  const useCustomContent = homePage?.isPublished && homePage?.sections?.length > 0;
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 overflow-hidden">
-        <div className="container-wide py-20 md:py-32">
-          <div className="max-w-3xl">
-            <h1 className="heading-1 text-gray-900 mb-6">
-              Fighting <span className="text-primary-500">Food Waste</span> &{' '}
-              <span className="text-primary-500">Hunger</span> Together
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              We collect surplus fruits from neighborhood backyards and farmers&apos; markets,
-              donating them to food banks to support families in need. Join us in making a difference.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/volunteer" className="btn-primary">
-                Become a Volunteer
-              </Link>
-              <Link href="/donation-drives" className="btn-secondary">
-                View Our Drives
-              </Link>
+      {useCustomContent ? (
+        // Render custom sections from admin
+        homePage.sections.map((section: IPageSection) => (
+          <RenderSection key={section.id} section={section} />
+        ))
+      ) : (
+        // Default Hero Section
+        <section className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 overflow-hidden">
+          <div className="container-wide py-20 md:py-32">
+            <div className="max-w-3xl">
+              <h1 className="heading-1 text-gray-900 mb-6">
+                Fighting <span className="text-primary-500">Food Waste</span> &{' '}
+                <span className="text-primary-500">Hunger</span> Together
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                We collect surplus fruits from neighborhood backyards and farmers&apos; markets,
+                donating them to food banks to support families in need. Join us in making a difference.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/volunteer" className="btn-primary">
+                  Become a Volunteer
+                </Link>
+                <Link href="/donation-drives" className="btn-secondary">
+                  View Our Drives
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-100/50 to-transparent -z-10" />
-      </section>
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-100/50 to-transparent -z-10" />
+        </section>
+      )}
 
       {/* Impact Stats */}
       <section className="bg-white py-16">
