@@ -8,7 +8,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-SERVER_IP="84.247.185.169"
+# Hosting moved to the US box on 2026-10-13 (was 84.247.185.169, Germany).
+SERVER_IP="85.239.239.134"
 SERVER_USER="root"
 REMOTE_APP_DIR="/root/thesacredtree"
 ZIP_FILE="sacredtree.zip"
