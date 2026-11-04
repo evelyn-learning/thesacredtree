@@ -43,8 +43,8 @@ export default function NewTeamMember() {
 
       router.push('/admin/team');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }

@@ -73,7 +73,7 @@ export default async function AdminDonationDrives() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {drives.map((drive: any) => (
+                {drives.map((drive) => (
                   <tr key={drive._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{drive.title}</div>

@@ -43,8 +43,8 @@ export default function NewDonationDrive() {
 
       router.push('/admin/donation-drives');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }

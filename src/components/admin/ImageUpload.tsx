@@ -66,8 +66,8 @@ export default function ImageUpload({
 
       const { url } = await res.json();
       onChange(url);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setUploading(false);
     }

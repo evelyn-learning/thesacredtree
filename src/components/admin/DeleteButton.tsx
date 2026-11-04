@@ -31,8 +31,8 @@ export default function DeleteButton({ id, endpoint, itemName = 'item' }: Delete
       }
 
       router.refresh();
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Something went wrong');
     } finally {
       setDeleting(false);
     }

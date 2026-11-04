@@ -64,7 +64,7 @@ export default async function AdminVolunteers() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {volunteers.map((volunteer: any) => (
+                {volunteers.map((volunteer) => (
                   <tr key={volunteer._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{volunteer.name}</div>
@@ -104,7 +104,7 @@ export default async function AdminVolunteers() {
           <div className="mt-6 bg-white rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Volunteer Details</h3>
             <div className="space-y-4">
-              {volunteers.slice(0, 5).map((volunteer: any) => (
+              {volunteers.slice(0, 5).map((volunteer) => (
                 <div key={volunteer._id} className="border-b border-gray-100 pb-4 last:border-0">
                   <div className="flex justify-between items-start mb-2">
                     <div>

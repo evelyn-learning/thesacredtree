@@ -42,8 +42,8 @@ export default function NewBlogPost() {
 
       router.push('/admin/blog');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }

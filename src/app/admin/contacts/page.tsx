@@ -51,7 +51,7 @@ export default async function AdminContacts() {
           </div>
         ) : (
           <div className="space-y-4">
-            {contacts.map((contact: any) => (
+            {contacts.map((contact) => (
               <div key={contact._id} className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>

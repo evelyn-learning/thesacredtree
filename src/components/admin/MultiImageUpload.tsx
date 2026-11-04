@@ -72,8 +72,8 @@ export default function MultiImageUpload({
 
       const { url } = await res.json();
       onChange([...value, url]);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setUploading(false);
     }

@@ -101,8 +101,8 @@ export default function EditPage() {
 
       router.push('/admin/pages');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -297,7 +297,7 @@ export default function EditPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {formData.sections.map((section, index) => (
+                {formData.sections.map((section) => (
                   <div
                     key={section.id}
                     className="border border-gray-200 rounded-lg p-4"
@@ -383,7 +383,7 @@ export default function EditPage() {
                             <p className="text-sm text-gray-400 italic">No buttons added yet</p>
                           ) : (
                             <div className="space-y-3">
-                              {section.buttons.map((button, btnIndex) => (
+                              {section.buttons.map((button) => (
                                 <div key={button.id} className="flex gap-2 items-start p-3 bg-gray-50 rounded-lg">
                                   <div className="flex-1 grid grid-cols-3 gap-2">
                                     <div>

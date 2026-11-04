@@ -73,7 +73,7 @@ export default async function AdminBlog() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {posts.map((post: any) => (
+                {posts.map((post) => (
                   <tr key={post._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="font-medium text-gray-900">{post.title}</div>

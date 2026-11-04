@@ -28,7 +28,7 @@ export default async function AdminPages() {
   if (!session) redirect('/admin/login');
 
   const savedPages = await getPages();
-  const savedPageMap = new Map(savedPages.map((p: any) => [p.slug, p]));
+  const savedPageMap = new Map(savedPages.map((p) => [p.slug, p]));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -57,7 +57,7 @@ export default async function AdminPages() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {editablePages.map((page) => {
-                const savedPage = savedPageMap.get(page.slug) as any;
+                const savedPage = savedPageMap.get(page.slug);
                 return (
                   <tr key={page.slug} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
