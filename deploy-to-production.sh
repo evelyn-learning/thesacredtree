@@ -131,6 +131,7 @@ run_remote_command "
   unzip -qo $ZIP_FILE && \
   rm -f $ZIP_FILE && \
   npm install --production --legacy-peer-deps && \
+  node scripts/add-news-posts.js && \
   pm2 restart $PM2_APP_NAME
 " || {
   log_message "ERROR" "Deployment failed on remote server"

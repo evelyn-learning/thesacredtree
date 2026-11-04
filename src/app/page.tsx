@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Building, Calendar, ArrowRight } from 'lucide-react';
+import { Heart, Users, Calendar, ArrowRight } from 'lucide-react';
 import { connectDB, isDBConfigured } from '@/lib/db';
 import DonationDrive from '@/models/DonationDrive';
 import Page, { IPageSection, IPageButton } from '@/models/Page';
@@ -10,9 +10,8 @@ export const dynamic = 'force-dynamic';
 
 const stats = [
   { label: 'People Supported', value: '1,000+', icon: Users },
-  { label: 'Shelters Impacted', value: '100+', icon: Building },
-  { label: 'Donation Drives', value: '50+', icon: Calendar },
-  { label: 'Community Partners', value: '20+', icon: Heart },
+  { label: 'Donation Drives', value: '30', icon: Calendar },
+  { label: 'Community Partners', value: '10+', icon: Heart },
 ];
 
 async function getHomePage() {
@@ -222,7 +221,7 @@ export default async function HomePage() {
       {/* Impact Stats */}
       <section className="bg-white py-16">
         <div className="container-wide">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-100 text-primary-500 mb-4">
@@ -234,6 +233,53 @@ export default async function HomePage() {
                 <div className="text-sm text-gray-500">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Press Feature Section */}
+      <section className="section-padding bg-white">
+        <div className="container-wide">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="heading-2 text-gray-900 mb-10">Sacred Tree in the News</h2>
+
+            <div className="relative w-full rounded-xl overflow-hidden shadow-lg mb-10 bg-gray-100">
+              <Image
+                src="/images/press-clipping-the-press.jpeg"
+                alt="The Press newspaper clipping: 'High school senior's non-profit helps those in need,' featuring The Sacred Tree founder Vanshika Tyagi"
+                width={1800}
+                height={1392}
+                className="w-full h-auto"
+              />
+            </div>
+
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg mb-6">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/JRERKSziXgE"
+                title="The Sacred Tree video interview"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+
+            <a
+              href="https://www.thepress.net/features/high-school-senior-s-non-profit-helps-those-in-need/article_0235d982-4972-48bb-bc15-44f0a6d840c8.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 font-medium"
+            >
+              Read the full article on The Press <ArrowRight className="w-4 h-4" />
+            </a>
+
+            <div className="mt-4">
+              <Link
+                href="/press"
+                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-primary-500 font-medium"
+              >
+                View all press coverage <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

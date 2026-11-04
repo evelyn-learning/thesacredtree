@@ -4,7 +4,10 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Providers from '@/components/Providers';
 
+const siteUrl = 'https://thesacredtree.org';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Sacred Tree Foundation | Fighting Food Waste & Hunger',
     template: '%s | Sacred Tree Foundation',
@@ -42,6 +45,20 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  name: 'Sacred Tree Foundation',
+  alternateName: 'The Sacred Tree',
+  url: siteUrl,
+  logo: `${siteUrl}/logo.png`,
+  description:
+    'A student-led 501(c)(3) nonprofit that rescues surplus fruits and vegetables from backyards and farms and donates them to food banks, churches, and family support organizations in Brentwood and Antioch, CA.',
+  foundingDate: '2024-01',
+  sameAs: ['https://www.instagram.com/sacredtreefoundation/'],
+  email: 'info@thesacredtree.org',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,6 +67,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <Providers>
           <Header />
           <main className="grow">{children}</main>

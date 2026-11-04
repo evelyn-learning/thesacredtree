@@ -8,6 +8,7 @@ const footerLinks = {
     { name: 'Our Mission', href: '/mission' },
     { name: 'Team', href: '/team' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Press', href: '/press' },
   ],
   getInvolved: [
     { name: 'Volunteer', href: '/volunteer' },

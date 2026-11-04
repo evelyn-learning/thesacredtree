@@ -11,6 +11,8 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+const siteUrl = 'https://thesacredtree.org';
+
 async function getPost(slug: string) {
   if (!isDBConfigured()) {
     return null;
@@ -53,8 +55,32 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featuredImage
+      ? [post.featuredImage.startsWith('http') ? post.featuredImage : `${siteUrl}${post.featuredImage}`]
+      : undefined,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt || post.publishedAt,
+    author: { '@type': 'Person', name: post.author },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Sacred Tree Foundation',
+      logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/blog/${post.slug}` },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Back Link */}
       <section className="bg-white border-b border-gray-100">
         <div className="container-wide py-4">
