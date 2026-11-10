@@ -63,6 +63,14 @@ export default function AboutPage() {
                 donate them to local food banks, shelters, and charitable organizations.
               </p>
               <p>
+                Our work has been recognized by the Contra Costa County Board of Supervisors
+                and the California State Senate.{' '}
+                <Link href="/press#awards" className="text-primary-500 hover:text-primary-600 font-medium">
+                  See our awards and recognition
+                </Link>
+                .
+              </p>
+              <p>
                 What started as a small initiative has grown into a movement that has supported
                 over 1,000 people and impacted more than 100 shelters. Our weekly donation drives
                 continue to make a difference, one bag of produce at a time.

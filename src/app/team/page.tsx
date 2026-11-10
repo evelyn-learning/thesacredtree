@@ -27,7 +27,7 @@ async function getTeamMembers() {
 
 // Fallback team data when database is not configured
 const fallbackTeam = [
-  { name: 'Vanshika Tyagi', role: 'Founder', bio: 'A visionary leader committed to fighting food waste and hunger.', location: 'California' },
+  { name: 'Vanshika Tyagi', role: 'Founder', bio: 'A visionary leader committed to fighting food waste and hunger. Under her leadership, the foundation has been recognized by the Contra Costa County Board of Supervisors and the California State Senate.', location: 'California' },
   { name: 'Siddhi', role: 'Coordinator', bio: 'Brings energy and creativity to every initiative.', location: 'California' },
   { name: 'Nada', role: 'Operations Manager', bio: 'Known for meticulous attention to detail.', location: 'California' },
   { name: 'Danielle', role: 'Community Liaison', bio: 'Connects with families and volunteers.', location: 'California' },

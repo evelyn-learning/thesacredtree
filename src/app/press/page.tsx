@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Newspaper, Mail, ArrowRight } from 'lucide-react';
+import { Newspaper, Mail, ArrowRight, Award } from 'lucide-react';
+import { awards } from '@/lib/awards';
 
 export const metadata: Metadata = {
-  title: 'Press & Media',
+  title: 'Press & Recognition',
   description:
-    'Media coverage of the Sacred Tree Foundation, the student-led nonprofit fighting food waste and hunger in Brentwood, CA.',
+    'Awards and media coverage of the Sacred Tree Foundation, the student-led nonprofit fighting food waste and hunger in Brentwood, CA, recognized by the Contra Costa County Board of Supervisors and the California State Senate.',
 };
 
 const pressMentions = [
@@ -31,19 +32,64 @@ export default function PressPage() {
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="container-wide">
           <div className="max-w-3xl">
-            <h1 className="heading-1 text-gray-900 mb-6">Press &amp; Media</h1>
+            <h1 className="heading-1 text-gray-900 mb-6">Press &amp; Recognition</h1>
             <p className="text-xl text-gray-600">
-              See what local media is saying about our mission to rescue surplus produce
-              and fight hunger in Brentwood and Antioch.
+              See how our mission to rescue surplus produce and fight hunger in Brentwood
+              and Antioch has been recognized by public officials and covered by local media.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Awards & Recognition */}
+      <section id="awards" className="section-padding bg-white scroll-mt-20">
+        <div className="container-wide">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="heading-2 text-gray-900 mb-12">Awards &amp; Recognition</h2>
+            <div className="flex flex-col gap-16">
+              {awards.map((award) => (
+                <article
+                  key={award.id}
+                  id={award.id}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center scroll-mt-24"
+                >
+                  <a
+                    href={award.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-xl overflow-hidden shadow-lg bg-gray-100"
+                  >
+                    <Image
+                      src={award.image}
+                      alt={award.imageAlt}
+                      width={award.width}
+                      height={award.height}
+                      sizes="(min-width: 768px) 480px, 100vw"
+                      className="w-full h-auto"
+                    />
+                  </a>
+                  <div>
+                    <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                      <Award className="w-4 h-4 text-primary-500" />
+                      <span className="font-medium text-gray-900">{award.title}</span>
+                      <span>&middot;</span>
+                      <span>{award.date}</span>
+                    </div>
+                    <h3 className="heading-3 text-gray-900 mb-4">{award.awardedBy}</h3>
+                    <p className="text-lg text-gray-600">{award.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Press Mentions */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-gray-50">
         <div className="container-wide">
           <div className="max-w-3xl mx-auto flex flex-col gap-16">
+            <h2 className="heading-2 text-gray-900 -mb-4">In the News</h2>
             {pressMentions.map((mention) => (
               <article key={mention.articleUrl} className="flex flex-col gap-6">
                 <div className="flex items-center gap-3 text-sm text-gray-500">
@@ -53,7 +99,7 @@ export default function PressPage() {
                   <span>{mention.date}</span>
                 </div>
 
-                <h2 className="heading-2 text-gray-900">{mention.headline}</h2>
+                <h3 className="heading-3 text-gray-900">{mention.headline}</h3>
                 <p className="text-lg text-gray-600">{mention.summary}</p>
 
                 <div className="relative w-full rounded-xl overflow-hidden shadow-lg bg-gray-100">
@@ -103,7 +149,7 @@ export default function PressPage() {
       </section>
 
       {/* Media Inquiries CTA */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="container-wide text-center">
           <h2 className="heading-3 text-gray-900 mb-4">Media Inquiries</h2>
           <p className="text-gray-600 mb-6">
