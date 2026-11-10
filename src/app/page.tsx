@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Calendar, ArrowRight } from 'lucide-react';
+import { Heart, Users, Calendar, ArrowRight, Apple, Award } from 'lucide-react';
+import { awards } from '@/lib/awards';
 import { connectDB, isDBConfigured } from '@/lib/db';
 import DonationDrive from '@/models/DonationDrive';
 import Page, { IPageSection, IPageButton } from '@/models/Page';
@@ -10,6 +11,7 @@ export const dynamic = 'force-dynamic';
 
 const stats = [
   { label: 'People Supported', value: '1,000+', icon: Users },
+  { label: 'Pounds of Produce Donated', value: '2,700+', icon: Apple },
   { label: 'Donation Drives', value: '30', icon: Calendar },
   { label: 'Community Partners', value: '10+', icon: Heart },
 ];
@@ -221,7 +223,7 @@ export default async function HomePage() {
       {/* Impact Stats */}
       <section className="bg-white py-16">
         <div className="container-wide">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-100 text-primary-500 mb-4">
@@ -233,6 +235,57 @@ export default async function HomePage() {
                 <div className="text-sm text-gray-500">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Awards & Recognition */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-wide">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="heading-2 text-gray-900 mb-4">Awards &amp; Recognition</h2>
+            <p className="text-lg text-gray-600">
+              Under the leadership of founder Vanshika Tyagi, our student volunteers&apos; work
+              has been honored at the county and state level.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {awards.map((award) => (
+              <Link
+                key={award.id}
+                href={`/press#${award.id}`}
+                className="card flex flex-col"
+              >
+                <div className="relative h-80 sm:h-96 bg-gray-100">
+                  <Image
+                    src={award.image}
+                    alt={award.imageAlt}
+                    fill
+                    sizes="(min-width: 768px) 480px, 100vw"
+                    className="object-contain p-4"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center gap-2 text-sm text-primary-500 font-medium mb-2">
+                    <Award className="w-4 h-4" />
+                    <span>{award.date}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-1">{award.awardedBy}</h3>
+                  <p className="text-sm text-gray-500 mb-3">{award.title}</p>
+                  <p className="text-gray-600">{award.summary}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              href="/press#awards"
+              className="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 font-medium"
+            >
+              Read more about our recognition <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
