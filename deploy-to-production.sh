@@ -122,12 +122,16 @@ else
 fi
 
 # Step 4: Deploy on remote server
+# The previous build (.next) is removed before unzipping: unzipping over it leaves
+# Next's runtime route cache (.next/server/route-cache) behind, which keeps serving
+# the old versions of static pages after a deploy.
 log_message "STEP" "Running deployment on production server..."
 run_remote_command "
   export NVM_DIR=\"\$HOME/.nvm\"
   [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
 
   cd $REMOTE_APP_DIR && \
+  rm -rf .next && \
   unzip -qo $ZIP_FILE && \
   rm -f $ZIP_FILE && \
   npm install --production --legacy-peer-deps && \
